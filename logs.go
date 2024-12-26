@@ -97,14 +97,14 @@ func (log *Logger) SetFormatter(formatter map[Level]string) {
 	log.formatter = formatter
 }
 
-func (log *Logger) logInterface(w io.Writer, level Level, s interface{}) {
+func (log *Logger) logInterface(w io.Writer, level Level, s ...interface{}) {
 	if log.Quiet {
 		return
 	}
 	if level < log.level {
 		return
 	}
-	line := log.Format(level, s)
+	line := log.Format(level, fmt.Sprint(s...))
 	fmt.Fprint(w, line)
 
 	if log.onLogger != nil {
@@ -116,20 +116,16 @@ func (log *Logger) logInterfacef(w io.Writer, level Level, format string, s ...i
 	log.logInterface(w, level, fmt.Sprintf(format, s...))
 }
 
-func (log *Logger) Print(level Level, s interface{}) {
-	log.logInterface(log.writer, level, s)
+func (log *Logger) Print(level Level, s ...interface{}) {
+	log.logInterface(log.writer, level, s...)
 }
 
 func (log *Logger) Printf(level Level, format string, s ...interface{}) {
 	log.logInterfacef(log.writer, level, format, s...)
 }
 
-func (log *Logger) Println(writer io.Writer, level Level, s ...interface{}) {
-	log.logInterface(writer, level, fmt.Sprintln(s...))
-}
-
-func (log *Logger) Info(s interface{}) {
-	log.logInterface(log.writer, Info, s)
+func (log *Logger) Info(s ...interface{}) {
+	log.logInterface(log.writer, Info, s...)
 }
 
 func (log *Logger) Infof(format string, s ...interface{}) {
@@ -140,8 +136,8 @@ func (log *Logger) FInfof(writer io.Writer, format string, s ...interface{}) {
 	log.logInterfacef(writer, Info, format, s...)
 }
 
-func (log *Logger) Error(s interface{}) {
-	log.logInterface(log.writer, Error, s)
+func (log *Logger) Error(s ...interface{}) {
+	log.logInterface(log.writer, Error, s...)
 }
 
 func (log *Logger) Errorf(format string, s ...interface{}) {
@@ -152,8 +148,8 @@ func (log *Logger) FErrorf(writer io.Writer, format string, s ...interface{}) {
 	log.logInterfacef(writer, Error, format, s...)
 }
 
-func (log *Logger) Warn(s interface{}) {
-	log.logInterface(log.writer, Warn, s)
+func (log *Logger) Warn(s ...interface{}) {
+	log.logInterface(log.writer, Warn, s...)
 }
 
 func (log *Logger) Warnf(format string, s ...interface{}) {
@@ -164,8 +160,8 @@ func (log *Logger) FWarnf(writer io.Writer, format string, s ...interface{}) {
 	log.logInterfacef(writer, Warn, format, s...)
 }
 
-func (log *Logger) Debug(s interface{}) {
-	log.logInterface(log.writer, Debug, s)
+func (log *Logger) Debug(s ...interface{}) {
+	log.logInterface(log.writer, Debug, s...)
 
 }
 
