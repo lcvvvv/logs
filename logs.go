@@ -98,18 +98,18 @@ func (log *Logger) SetFormatter(formatter map[Level]string) {
 }
 
 func (log *Logger) logInterface(w io.Writer, level Level, s ...interface{}) {
+	line := log.Format(level, fmt.Sprint(s...))
+	if log.onLogger != nil {
+		log.onLogger(level, line)
+	}
+
 	if log.Quiet {
 		return
 	}
 	if level < log.level {
 		return
 	}
-	line := log.Format(level, fmt.Sprint(s...))
 	fmt.Fprint(w, line)
-
-	if log.onLogger != nil {
-		log.onLogger(level, line)
-	}
 }
 
 func (log *Logger) logInterfacef(w io.Writer, level Level, format string, s ...interface{}) {
